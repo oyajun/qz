@@ -3,8 +3,6 @@ import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
 
-import { setCookie, getCookie } from 'cookies-next';
-
 export default function SearchBox() {
   function search(formData: FormData) {
 
@@ -13,12 +11,24 @@ export default function SearchBox() {
     const qiita = "https://qiita.com/search?q=" + query;
     const zenn = "https://zenn.dev/search?q=" + query;
 
-    window.open(zenn, "_blank");
-    window.open(qiita, "_blank");
+    let zennWindow = window.open(zenn, "_blank");
+    let qiitaWindow = window.open(qiita, "_blank");
 
-    if (getCookie('accessed') === undefined) {
-      alert('検索結果が開かない場合は、ブラウザの設定でポップアップを許可してください。');
-      setCookie('accessed', true);
+    let zennError = false;
+    let qiitaError = false;
+    if (zennWindow === null || typeof (qiitaWindow) === 'undefined') {
+      zennError = true;
+    }
+    if (qiitaWindow === null || typeof (qiitaWindow) === 'undefined') {
+      qiitaError = true;
+    }
+
+    if (zennError && qiitaError) {
+      alert('検索結果が開けませんでした。ブラウザの設定でポップアップを許可してください。');
+    } else if (zennError) {
+      alert('Zennの検索結果が開けませんでした。ブラウザの設定でポップアップを許可してください。');
+    } else if (qiitaError) {
+      alert('Qiitaの検索結果が開けませんでした。ブラウザの設定でポップアップを許可してください。');
     }
   }
 
